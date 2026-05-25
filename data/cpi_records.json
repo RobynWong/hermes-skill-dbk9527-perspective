@@ -1,0 +1,21 @@
+{
+  "_meta": {
+    "description": "CPI/PPI月度数据记录",
+    "rules": {
+      "rule1": "每月8号之前不查询CPI",
+      "rule2": "CPI发布日期以BLS官方schedule为准",
+      "rule3": "CPI公布一周后不再分析CPI对BTC影响"
+    },
+    "source_priority": [
+      "local_record > web_search > faireconomy_api > user_input"
+    ]
+  },
+  "2026-05": {
+    "released": true,
+    "date": "2026-05-14",
+    "release_date": "2026-05-14",
+    "source": "date_inference",
+    "updated_at": "2026-05-14T23:37:33.618452",
+    "note": "日期推断CPI已出，建议--save补录"
+  }
+}
