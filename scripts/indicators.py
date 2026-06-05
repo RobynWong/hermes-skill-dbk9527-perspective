@@ -176,6 +176,32 @@ def fetch_funding_and_oi():
     except Exception as e:
         print(f"  资金费率获取失败: {e}")
 
+    # 获取当前持仓量（2026-05-28新增）
+    try:
+        oi = exchange.fetch_open_interest(SYMBOL)
+        if oi:
+            oi_contracts = oi.get('openInterestAmount', 0)
+            oi_btc = oi.get('baseVolume', 0)
+            oi_usd = oi.get('openInterestValue', 0)
+            print(f"  持仓量: {oi_contracts:,.0f}张 | {oi_btc:,.2f}BTC | ${oi_usd/1e8:,.1f}亿")
+        else:
+            print("  持仓量获取失败")
+    except Exception as e:
+        print(f"  持仓量获取失败: {e}")
+
+    # 获取24小时OI变化趋势（2026-05-28新增）
+    try:
+        oi_hist = exchange.fetch_open_interest_history(SYMBOL, timeframe='1h', limit=24)
+        if oi_hist and len(oi_hist) >= 2:
+            oi_first = oi_hist[0].get('openInterestValue', 0)
+            oi_last = oi_hist[-1].get('openInterestValue', 0)
+            if oi_first > 0:
+                oi_change = (oi_last - oi_first) / oi_first * 100
+                trend = "增仓" if oi_change > 1 else ("减仓" if oi_change < -1 else "持平")
+                print(f"  24H OI变化: {oi_change:+.2f}% ({trend})")
+    except Exception as e:
+        print(f"  OI历史获取失败: {e}")
+
 
 def analyze_timeframe(tf, limit):
     """分析单个时间周期"""
