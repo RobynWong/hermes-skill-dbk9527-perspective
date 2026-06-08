@@ -55,6 +55,22 @@ for attempt in range(3):
 2. 使用浏览器cookies：`yt-dlp --cookies-from-browser chrome`
 3. 使用deno运行时：`yt-dlp --js-runtimes deno:/path/to/deno.exe`
 
+### Cookies过期（2026-06-08验证）
+
+**现象**：yt-dlp即使带cookies仍报"Sign in to confirm you're not a bot"，cookies文件只有基本的PREF和SOCS条目（没有认证cookies）。
+
+**原因**：cookies文件过期，YouTube认证cookies有时效限制。
+
+**解决方案（优先级）**：
+1. **Windows端用浏览器cookies**（最可靠）：
+   ```powershell
+   yt-dlp --cookies-from-browser chrome --write-auto-sub --sub-lang zh-TW --skip-download --output "C:\Users\Robyn\Downloads\VIDEO_ID" "https://www.youtube.com/watch?v=VIDEO_ID"
+   ```
+2. **重新导出cookies**：在Chrome中登录YouTube → 用"Get cookies.txt LOCALLY"扩展导出 → 覆盖 `C:\Users\Robyn\Downloads\cookies.txt`
+3. **youtube-transcript-api重试**：最新视频（<1天）首次可能失败，等待后重试即可（2026-06-03验证）
+
+**⚠️ cookies过期的判断方法**：检查cookies文件头部，如果只有PREF和SOCS两行（没有SID、HSID、SSID等认证条目），说明已过期。
+
 ### deno路径（Windows）
 
 ```
